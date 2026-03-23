@@ -1,7 +1,6 @@
 package ghostvaultkv.api;
 
-import java.nio.charset.StandardCharsets;
-import ghostvaultkv.internal.NativeGhostvaultKV;
+import ghostvaultkv.internal.NativeGhostvaultKVWrapper;
 
 /**
  * Implementation of basic Ghostvault KV API.
@@ -11,12 +10,10 @@ import ghostvaultkv.internal.NativeGhostvaultKV;
  * @version 21.03.26
  */
 public class GhostvaultKVStoreImpl implements GhostvaultKVStore {
-    private final NativeGhostvaultKV nativeStore;
-    private final long handle;
+    private final NativeGhostvaultKVWrapper wrapper;
 
     public GhostvaultKVStoreImpl(String path) {
-        this.nativeStore = new NativeGhostvaultKV();
-        this.handle = nativeStore.open(path);
+        wrapper = new NativeGhostvaultKVWrapper(path);
     }
 
     @Override
@@ -24,36 +21,32 @@ public class GhostvaultKVStoreImpl implements GhostvaultKVStore {
         validateKey(key);
         validateValue(value);
 
-        nativeStore.put(handle,
-                key.getBytes(StandardCharsets.UTF_8),
-                value.getBytes(StandardCharsets.UTF_8));
+        wrapper.put(key, value);
     }
 
     @Override
     public String get(String key) {
         validateKey(key);
 
-        byte[] result = nativeStore.get(handle,
-                key.getBytes(StandardCharsets.UTF_8));
+        String result = wrapper.get(key);
 
         if (result == null) {
             throw new RuntimeException("Key not found: " + key);
         }
 
-        return new String(result, StandardCharsets.UTF_8);
+        return result;
     }
 
     @Override
     public void delete(String key) {
         validateKey(key);
 
-        nativeStore.delete(handle,
-                key.getBytes(StandardCharsets.UTF_8));
+        wrapper.delete(key);
     }
 
     @Override
     public void close() {
-        nativeStore.close(handle);
+        wrapper.close();
     }
 
     private void validateKey(String key) {

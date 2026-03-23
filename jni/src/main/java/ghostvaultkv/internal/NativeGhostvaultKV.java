@@ -7,16 +7,16 @@ package ghostvaultkv.internal;
  *
  * @version 21.03.26
  */
-public class NativeGhostvaultKV {
+class NativeGhostvaultKV {
 
     static {
         System.loadLibrary("ghostvaultkvstore");
     }
 
-    native public long open(String path);
-    native public void close(long handle);
+    native long open(String path);
+    native void close(long handle);
 
-    native public byte[] get(long handle, byte[] key);
-    native public void put(long handle, byte[] key, byte[] value);
-    native public void delete(long handle, byte[] key);
+    native byte[] get(long handle, byte[] key);
+    native void put(long handle, byte[] key, byte[] value);
+    native void delete(long handle, byte[] key);
 }
