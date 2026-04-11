@@ -8,3 +8,5 @@
 rootProject.name = "ghostvault-kv"
 
 include("core", "jni")
+
+include("cli")
