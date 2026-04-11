@@ -8,10 +8,6 @@ java {
     }
 }
 
-dependencies {
-    implementation(project(":core"))
-}
-
 tasks.register<Exec>("buildNative") {
     workingDir = file("../native")
     commandLine("nmake")
