@@ -14,9 +14,8 @@ dependencies {
 
 tasks.register<Exec>("buildNative") {
     workingDir = file("../native")
-    commandLine("nmake")
 }
 
-tasks.named("build") {
-    dependsOn("buildNative")
+tasks.compileJava {
+    options.headerOutputDirectory.set(file("../native/include"))
 }

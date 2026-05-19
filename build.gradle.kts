@@ -5,6 +5,10 @@
  * Learn more about Gradle by exploring our Samples at https://docs.gradle.org/9.4.0/samples
  */
 
+plugins {
+    base
+}
+
 subprojects {
     group = "com.yourname.kvstore"
     version = "0.1.0"
@@ -12,4 +16,21 @@ subprojects {
     repositories {
         mavenCentral()
     }
+}
+
+tasks.register<Exec>("configureNative") {
+    workingDir("native")
+    commandLine("cmake", "-B", "build", "-G", "Ninja")
+}
+
+tasks.register<Exec>("compileNative") {
+    dependsOn(":jni:compileJava")
+    dependsOn("configureNative")
+
+    workingDir("native")
+    commandLine("cmake", "--build", "build")
+}
+
+tasks.named("build") {
+    dependsOn("compileNative")
 }
